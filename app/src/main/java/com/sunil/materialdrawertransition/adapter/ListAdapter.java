@@ -2,11 +2,13 @@ package com.sunil.materialdrawertransition.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 import com.sunil.materialdrawertransition.R;
@@ -21,15 +23,29 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder>{
 
     List<ImageModel> listimages;
     Context mcontext;
+    OnItemClickListener mItemClickListener;
 
     public ListAdapter( Context context,List<ImageModel> list) {
         this.listimages = list;
         this.mcontext = context;
+
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.grid_item_row, viewGroup, false);
+      /*  ViewHolder vh = new ViewHolder(v, new ViewHolder.IMyViewHolderClicks() {
+            public void onPotato(View caller) {
+                //Log.d("Poh-tah-tos");
+                ViewHolder holder = (ViewHolder) caller.getTag();
+                int position = holder.getPosition();
+                String title=listimages.get(position).getTitle();
+                Toast.makeText(mcontext, "Tile is: "+title, Toast.LENGTH_LONG).show();
+
+            };
+
+    });*/
+
         return new ViewHolder(v);
     }
 
@@ -46,18 +62,37 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder>{
         return  listimages.size();
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public TextView title;
         public ImageView image;
+        public Context context;
+
 
         public ViewHolder(View itemView) {
             super(itemView);
             title = (TextView) itemView.findViewById(R.id.title);
             image = (ImageView)itemView.findViewById(R.id.image);
+            itemView.setOnClickListener(this);
+
+        }
+
+        @Override
+        public void onClick(View v) {
+            if (mItemClickListener != null) {
+                mItemClickListener.onItemClick(v, getPosition());
+            }
         }
 
     }
 
+
+    public interface OnItemClickListener {
+        public void onItemClick(View view , int position);
+    }
+
+    public void SetOnItemClickListener(final OnItemClickListener mItemClickListener) {
+        this.mItemClickListener = mItemClickListener;
+    }
 
 
 /*    public GridAdapter(Context activity, List<ImageModel> list){

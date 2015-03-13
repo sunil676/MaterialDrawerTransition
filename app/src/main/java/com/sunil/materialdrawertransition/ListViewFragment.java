@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.sunil.materialdrawertransition.adapter.ListAdapter;
 import com.sunil.materialdrawertransition.model.ImageModel;
@@ -22,29 +23,7 @@ import java.util.List;
 public class ListViewFragment extends Fragment{
 
     private RecyclerView mRecyclerView;
-
-    String imagearray[]={
-            "http://storage.googleapis.com/androiddevelopers/sample_data/activity_transition/thumbs/flying_in_the_light.jpg",
-            "http://storage.googleapis.com/androiddevelopers/sample_data/activity_transition/thumbs/caterpillar.jpg",
-            "http://storage.googleapis.com/androiddevelopers/sample_data/activity_transition/thumbs/look_me_in_the_eye.jpg",
-            "http://storage.googleapis.com/androiddevelopers/sample_data/activity_transition/thumbs/flamingo.jpg",
-            "http://storage.googleapis.com/androiddevelopers/sample_data/activity_transition/thumbs/rainbow.jpg",
-            "http://storage.googleapis.com/androiddevelopers/sample_data/activity_transition/thumbs/over_there.jpg",
-            "http://storage.googleapis.com/androiddevelopers/sample_data/activity_transition/thumbs/jelly_fish_2.jpg",
-            "http://storage.googleapis.com/androiddevelopers/sample_data/activity_transition/thumbs/lone_pine_sunset.jpg"
-    };
-    String title[]={
-            "flying_in_the_light",
-            "caterpillar",
-            "look_me_in_the_eye",
-            "flamingo",
-            "rainbow",
-            "over_there",
-            "jelly_fish_2",
-            "lone_pine_sunset"
-    };
-
-    List<ImageModel> list=new ArrayList<ImageModel>();
+    List<ImageModel> list;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -55,17 +34,19 @@ public class ListViewFragment extends Fragment{
         mRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
-
-        for (int i=0; i< imagearray.length; i++){
-
-            String imageurl=imagearray[i];
-            String titlename=title[i];
-            ImageModel model=new ImageModel(imageurl, titlename);
-            list.add(model);
-        }
+        list=new ImageUtil().getimagelist();
 
         ListAdapter adapter=new ListAdapter(getActivity(), list);
         mRecyclerView.setAdapter(adapter);
+
+        adapter.SetOnItemClickListener(new ListAdapter.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(View v , int position) {
+                String title=list.get(position).getTitle();
+                Toast.makeText(getActivity(), "Tile is: " + title, Toast.LENGTH_LONG).show();
+            }
+        });
 
         return rootView;
     }

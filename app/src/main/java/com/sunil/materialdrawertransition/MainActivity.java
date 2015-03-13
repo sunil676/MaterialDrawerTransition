@@ -44,6 +44,7 @@ public class MainActivity extends ActionBarActivity {
         int PROFILE = R.drawable.sunil;
         mAdapter = new MyAdapter(TITLES,ICONS,NAME,EMAIL,PROFILE);
         mRecyclerView.setAdapter(mAdapter);
+
         mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
 
