@@ -3,6 +3,9 @@
 
     <string name="app_name">MaterialDrawerTransition</string>
     <string name="hello_world">Hello world!</string>
+    <string name="openDrawer">Open Drawer</string>
+    <string name="closeDrawer">Close Drawer</string>
     <string name="action_settings">Settings</string>
+
 
 </resources>
