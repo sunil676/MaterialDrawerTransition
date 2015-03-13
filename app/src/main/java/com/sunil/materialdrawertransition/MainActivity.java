@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.sunil.materialdrawertransition.adapter.MyAdapter;
 
@@ -19,7 +20,7 @@ import com.sunil.materialdrawertransition.adapter.MyAdapter;
 public class MainActivity extends ActionBarActivity {
 
     RecyclerView mRecyclerView;                           // Declaring RecyclerView
-    RecyclerView.Adapter mAdapter;                        // Declaring Adapter For Recycler View
+    MyAdapter mAdapter;                        // Declaring Adapter For Recycler View
     RecyclerView.LayoutManager mLayoutManager;            // Declaring Layout Manager as a linear layout manager
     DrawerLayout Drawer;                                  // Declaring DrawerLayout
     private Toolbar toolbar;
@@ -44,11 +45,35 @@ public class MainActivity extends ActionBarActivity {
         int PROFILE = R.drawable.sunil;
         mAdapter = new MyAdapter(TITLES,ICONS,NAME,EMAIL,PROFILE);
         mRecyclerView.setAdapter(mAdapter);
-
+        Drawer = (DrawerLayout) findViewById(R.id.DrawerLayout);
         mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
 
-        Drawer = (DrawerLayout) findViewById(R.id.DrawerLayout);
+        mAdapter.SetOnItemClickListener(new MyAdapter.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(View v , int position) {
+
+                Drawer.closeDrawer(mRecyclerView);
+                Toast.makeText(getApplicationContext(), "item clicked: "+position, Toast.LENGTH_LONG).show();
+                Fragment fragment = null;
+                if (position==1){
+                    fragment = new GridViewFragment();
+                }
+                else if (position==2){
+                    fragment = new ListViewFragment();
+                }
+                if (fragment != null) {
+                    FragmentManager fragmentManager = getSupportFragmentManager();
+                    fragmentManager.beginTransaction().replace(R.id.frame_container, fragment).commit();
+
+                }
+
+            }
+        });
+
+
+
         mDrawerToggle = new ActionBarDrawerToggle(this,Drawer,toolbar,R.string.openDrawer,R.string.closeDrawer){
 
             @Override

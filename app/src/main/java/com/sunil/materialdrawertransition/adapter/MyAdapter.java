@@ -25,46 +25,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     private String name;        //String Resource for header View Name
     private int profile;        //int Resource for header view profile picture
     private String email;       //String Resource for header view email
-
-
-    // Creating a ViewHolder which extends the RecyclerView View Holder
-    // ViewHolder are used to to store the inflated views in order to recycle them
-
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-        int Holderid;
-
-        TextView textView;
-        ImageView imageView;
-        ImageView profile;
-        TextView Name;
-        TextView email;
-
-
-        public ViewHolder(View itemView,int ViewType) {                 // Creating ViewHolder Constructor with View and viewType As a parameter
-            super(itemView);
-
-
-            // Here we set the appropriate view in accordance with the the view type as passed when the holder object is created
-
-            if(ViewType == TYPE_ITEM) {
-                textView = (TextView) itemView.findViewById(R.id.rowText); // Creating TextView object with the id of textView from item_row.xml
-                imageView = (ImageView) itemView.findViewById(R.id.rowIcon);// Creating ImageView object with the id of ImageView from item_row.xml
-                Holderid = 1;                                               // setting holder id as 1 as the object being populated are of type item row
-            }
-            else{
-
-
-                Name = (TextView) itemView.findViewById(R.id.name);         // Creating Text View object from header.xml for name
-                email = (TextView) itemView.findViewById(R.id.email);       // Creating Text View object from header.xml for email
-                profile = (ImageView) itemView.findViewById(R.id.circleView);// Creating Image view object from header.xml for profile pic
-                Holderid = 0;                                                // Setting holder id = 0 as the object being populated are of type header view
-            }
-        }
-
-
-    }
-
-
+    OnItemClickListener mItemClickListener;
 
     public MyAdapter(String Titles[],int Icons[],String Name,String Email, int Profile){ // MyAdapter Constructor with titles and icons parameter
         // titles, icons, name, email, profile pic are passed from the main activity as we
@@ -75,19 +36,10 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         profile = Profile;                     //here we assign those passed values to the values we declared here
         //in adapter
 
-
-
     }
 
-
-
-    //Below first we ovverride the method onCreateViewHolder which is called when the ViewHolder is
-    //Created, In this method we inflate the item_row.xml layout if the viewType is Type_ITEM or else we inflate header.xml
-    // if the viewType is TYPE_HEADER
-    // and pass it to the view holder
-
     @Override
-    public MyAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
         if (viewType == TYPE_ITEM) {
             View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_row,parent,false); //Inflating the layout
@@ -149,5 +101,61 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     private boolean isPositionHeader(int position) {
         return position == 0;
     }
+
+
+    public interface OnItemClickListener {
+        public void onItemClick(View view , int position);
+    }
+
+    public void SetOnItemClickListener(final OnItemClickListener mItemClickListener) {
+        this.mItemClickListener = mItemClickListener;
+    }
+
+
+    // Creating a ViewHolder which extends the RecyclerView View Holder
+    // ViewHolder are used to to store the inflated views in order to recycle them
+
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+
+        int Holderid;
+
+        TextView textView;
+        ImageView imageView;
+        ImageView profile;
+        TextView Name;
+        TextView email;
+
+        public ViewHolder(View itemView,int ViewType) {                 // Creating ViewHolder Constructor with View and viewType As a parameter
+            super(itemView);
+
+            // Here we set the appropriate view in accordance with the the view type as passed when the holder object is created
+
+            if(ViewType == TYPE_ITEM) {
+                textView = (TextView) itemView.findViewById(R.id.rowText); // Creating TextView object with the id of textView from item_row.xml
+                imageView = (ImageView) itemView.findViewById(R.id.rowIcon);// Creating ImageView object with the id of ImageView from item_row.xml
+                Holderid = 1;                                               // setting holder id as 1 as the object being populated are of type item row
+            }
+            else{
+
+
+                Name = (TextView) itemView.findViewById(R.id.name);         // Creating Text View object from header.xml for name
+                email = (TextView) itemView.findViewById(R.id.email);       // Creating Text View object from header.xml for email
+                profile = (ImageView) itemView.findViewById(R.id.circleView);// Creating Image view object from header.xml for profile pic
+                Holderid = 0;                                                // Setting holder id = 0 as the object being populated are of type header view
+            }
+            itemView.setOnClickListener(this);
+
+
+        }
+
+        @Override
+        public void onClick(View v) {
+            if (mItemClickListener != null) {
+                mItemClickListener.onItemClick(v, getPosition());
+            }
+        }
+
+      }
+
 
 }
